@@ -1,0 +1,18 @@
+Name,Business Unit,URLs,schedule Frequency,Schedule Status,schedule Start,schedule Duration,Scan Recurrence Type,Scan Recurrence Interval,Scan Recurrence,Scan Recurrence schedule End After
+demo 11-03-24,No Business Unit,['http://petstoreapi.rpereira.vuln.sa.veracode.io:5000'],RECURRING,ACTIVE,2025-12-12T10:50:39Z[UTC],2 days,monthly,1,second friday of the month,12 months
+Test-container,No Business Unit,['https://rare-bobcat-78.loca.lt/'],RECURRING,ACTIVE,2025-10-29T13:44:04Z[UTC],2 days,weekly,1,wednesdays,52 weeks
+Demo 08-12-23,No Business Unit,['https://testphp.vulnweb.com/'],SAVE_FOR_LATER,,,,,,,
+Demo 03 feb 23,No Business Unit,['http://www.veracode.com/'],SAVE_FOR_LATER,,,,,,,
+A new API Scan 123,No Business Unit,['http://petstoreapi.rpereira.vuln.sa.veracode.io:5000'],SAVE_FOR_LATER,,,,,,,
+New DAST 23-11,No Business Unit,['http://veracode.com/'],SAVE_FOR_LATER,,,,,,,
+New Test,No Business Unit,['https://lovely-dog-52.loca.lt/'],PRESCAN_ONLY,,,,,,,
+Pet Store,No Business Unit,['http://petstoreapi.rpereira.vuln.sa.veracode.io:5000'],ONCE,COMPLETED,2022-05-25T12:36:28Z[UTC],24 hours,,,,
+Verademo pre-production,No Business Unit,['https://warm-snails-learn-213-205-240-90.loca.lt/'],ONCE,COMPLETED,2022-05-25T12:26:25Z[UTC],24 hours,,,,
+An API Scan,No Business Unit,['http://petstoreapi.rpereira.vuln.sa.veracode.io:5000'],SAVE_FOR_LATER,,,,,,,
+API Scan,No Business Unit,['http://petstoreapi.rpereira.vuln.sa.veracode.io:5000'],ONCE,COMPLETED,2022-01-20T11:25:26Z[UTC],24 hours,,,,
+API Scanning,No Business Unit,['http://petstoreapi.rpereira.vuln.sa.veracode.io:5000'],SAVE_FOR_LATER,,,,,,,
+API Scanning Demo,No Business Unit,['http://petstoreapi.rpereira.vuln.sa.veracode.io:5000'],ONCE,COMPLETED,2021-11-24T13:50:52Z[UTC],24 hours,,,,
+Test 2 URLs,No Business Unit,"['https://weak-otter-14.loca.lt/', 'https://calm-bullfrog-45.loca.lt/']",ONCE,COMPLETED,2021-07-30T15:05:53Z[UTC],24 hours,,,,
+Test schedule,No Business Unit,['http://asdasdasdasdasd/'],PRESCAN_ONLY,,,,,,,
+Basic Scan,No Business Unit,['https://young-ladybug-5.loca.lt/'],ONCE,COMPLETED,2021-07-23T14:13:03Z[UTC],24 hours,,,,
+Login Script Example,No Business Unit,['https://tall-wombat-54.loca.lt/'],ONCE,COMPLETED,2021-07-23T12:21:16Z[UTC],24 hours,,,,

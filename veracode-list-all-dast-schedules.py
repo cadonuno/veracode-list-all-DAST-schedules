@@ -1,26 +1,25 @@
 import argparse
 import csv
-from veracode_api_py import Analyses, BusinessUnits, Scans, Occurrences
+from veracode_api_py import Analyses, BusinessUnits
 
-def get_actual_start_date(analysis):
-    return analysis["actual_start_date"] if "actual_start_date" in analysis else "NONE"
-
-def get_scheduled_start_date(analysis):
-    return analysis["start_date"] if "start_date" in analysis else "NONE"
-
-def get_create_date(base_analysis):
-    return base_analysis["created_on"] if "created_on" in base_analysis else "NONE"
-
-def get_actual_end_date(analysis):
-    return analysis["actual_end_date"] if "actual_end_date" in analysis else "NONE"
-
-def get_scheduled_end_date(analysis):
-    return analysis["end_date"] if "end_date" in analysis else "NONE"
-
-def get_status(analysis):
-    if "status" in analysis and "status_type" in analysis["status"]:
-        return analysis["status"]["status_type"]
-    return 'No status found'
+def get_scan_info(analysis, business_unit, urls):
+    scan_info = { "name": analysis["name"], "business_unit": business_unit, "URLs": urls, "schedule_frequency": analysis["schedule_frequency"]["frequency_type"] }
+    if "schedule_summary" in analysis:
+        schedule = analysis["schedule_summary"]
+        scan_info["schedule_status"] = schedule["schedule_status"]
+        scan_info["schedule_start"] = schedule["start_date"]
+        scan_info["schedule_duration"] = f"{schedule["duration"]["length"]} {schedule["duration"]["unit"].lower()}s"
+        if "scan_recurrence_schedule" in schedule:
+            recurrence = schedule["scan_recurrence_schedule"]
+            scan_info["recurrence_type"] = recurrence["recurrence_type"].lower()
+            scan_info["recurrence_interval"] = recurrence["recurrence_interval"]
+            if scan_info["recurrence_type"] == "monthly":
+                scan_info["recurrence_info"] = f"{recurrence["week_of_month"].lower()} {recurrence["day_of_week"].lower()} of the month"
+            else:
+                scan_info["recurrence_info"] = f"{recurrence["day_of_week"].lower()}s"
+            scan_info["recurrence_end_after"] = f"{recurrence["schedule_end_after"]} {'months' if scan_info["recurrence_type"] == 'monthly' else 'weeks'}"
+    
+    return scan_info
 
 def main():
     parser = argparse.ArgumentParser(
@@ -55,13 +54,12 @@ def main():
         urls = []
         for scan in scans:
             urls.append(scan["target_url"])
-        all_dast_scans.append({ "name": analysis["name"], "business_unit": business_unit, "URLs": urls, "schedule_frequency": analysis["schedule_frequency"], "schedule_summary": analysis["schedule_summary"] if "schedule_summary" in analysis else "" })
+        all_dast_scans.append(get_scan_info(analysis, business_unit, urls))
 
     with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["Name", "Business Unit", "Create Date", "URLs", "Schedule Frequency", "Schedule Summary"])
+        csv_writer.writerow(["Name", "Business Unit", "URLs", "Schedule Frequency", "Schedule Status", "Schedule Start", "Schedule Duration", "Scan Recurrence Type", "Scan Recurrence Interval", "Scan Recurrence", "Scan Recurrence schedule End After"])
         for entry in all_dast_scans:
-            csv_writer.writerow([entry["name"], entry["business_unit"], entry["URLs"], entry["schedule_frequency"], entry["schedule_summary"]])
-
+            csv_writer.writerow([entry["name"], entry["business_unit"], entry["URLs"], entry["schedule_frequency"], entry.get("schedule_status", ""), entry.get("schedule_start", ""), entry.get("schedule_duration", ""), entry.get("recurrence_type", ""), entry.get("recurrence_interval", ""), entry.get("recurrence_info", ""), entry.get("recurrence_end_after", "")])
 if __name__ == '__main__':
     main()
