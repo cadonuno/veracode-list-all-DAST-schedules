@@ -1,5 +1,6 @@
 import argparse
 import csv
+from numpy import info
 from veracode_api_py import Analyses, BusinessUnits
 
 def get_scan_info(analysis, business_unit, urls):
@@ -18,6 +19,16 @@ def get_scan_info(analysis, business_unit, urls):
             else:
                 scan_info["recurrence_info"] = f"{recurrence["day_of_week"].lower()}s"
             scan_info["recurrence_end_after"] = f"{recurrence["schedule_end_after"]} {'months' if scan_info["recurrence_type"] == 'monthly' else 'weeks'}"
+        if "scan_blackout_schedule" in schedule:
+            blackout = schedule["scan_blackout_schedule"]
+            scan_info["pause_and_resume_type"] = blackout["blackout_type"]
+            if blackout["blackout_type"] == 'THESE_HOURS':
+                scan_info["pause_and_resume_info"] = f"{blackout['blackout_start_time']}-{blackout['blackout_end_time']}"
+            else:
+                scan_info["pause_and_resume_info"] = blackout["blackout_days"]
+        else:
+            scan_info["pause_and_resume_type"] = "No pause/resume schedule"
+            scan_info["pause_and_resume_info"] = ""
     
     return scan_info
 
@@ -58,8 +69,15 @@ def main():
 
     with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["Name", "Business Unit", "URLs", "Schedule Frequency", "Schedule Status", "Schedule Start", "Schedule Duration", "Scan Recurrence Type", "Scan Recurrence Interval", "Scan Recurrence", "Scan Recurrence schedule End After"])
+        csv_writer.writerow(["Name", "Business Unit", "URLs", "Schedule Frequency", "Schedule Status", 
+                             "Schedule Start", "Schedule Duration", "Scan Recurrence Type", "Scan Recurrence Interval", 
+                             "Scan Recurrence", "Scan Recurrence schedule End After", "Pause and Resume Type", "Pause and Resume Information"])
         for entry in all_dast_scans:
-            csv_writer.writerow([entry["name"], entry["business_unit"], entry["URLs"], entry["schedule_frequency"], entry.get("schedule_status", ""), entry.get("schedule_start", ""), entry.get("schedule_duration", ""), entry.get("recurrence_type", ""), entry.get("recurrence_interval", ""), entry.get("recurrence_info", ""), entry.get("recurrence_end_after", "")])
+            csv_writer.writerow([entry["name"], entry["business_unit"], entry["URLs"], entry["schedule_frequency"], 
+                                 entry.get("schedule_status", ""), entry.get("schedule_start", ""), entry.get("schedule_duration", ""), 
+                                 entry.get("recurrence_type", ""), entry.get("recurrence_interval", ""), entry.get("recurrence_info", ""), 
+                                 entry.get("recurrence_end_after", ""), entry.get("pause_and_resume_type", ""), 
+                                 entry.get("pause_and_resume_info", "")])
+
 if __name__ == '__main__':
     main()
