@@ -1,1 +1,2 @@
 veracode-api-py>=0.9.57
+numpy>=2.4.4
